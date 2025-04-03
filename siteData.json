@@ -61,8 +61,16 @@
         "glossary": "Glossary",
         "appendix-instructions-for-manual-testing": "Appendix: Instructions for manual testing",
         "launch-and-shutdown": "Launch and shutdown",
-        "deleting-a-person": "Deleting a person",
-        "saving-data": "Saving data"
+        "viewing-help": "Viewing Help",
+        "adding-a-tutee": "Adding a tutee",
+        "finding-a-tutee": "Finding a Tutee",
+        "listing-all-tutees": "Listing all tutees",
+        "pinning-unpinning-a-tutee": "Pinning/ Unpinning a tutee",
+        "sorting-the-list": "Sorting the list",
+        "editing-a-tutee": "Editing a tutee",
+        "deleting-a-module-from-connects": "Deleting a Module from ConnectS",
+        "deleting-a-tutorial-from-connects": "Deleting a Tutorial from ConnectS",
+        "saving-data": "Saving Data"
       },
       "headingKeywords": {}
     },
