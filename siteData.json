@@ -52,6 +52,7 @@
         "implementation": "Implementation",
         "change-view-mode": "Change View Mode",
         "sort-tutees-feature": "Sort tutees feature",
+        "pin-a-tutee-feature": "Pin a Tutee feature",
         "proposed-data-archiving": "[Proposed] Data archiving",
         "documentation-logging-testing-configuration-dev-ops": "Documentation, logging, testing, configuration, dev-ops",
         "appendix-requirements": "Appendix: Requirements",
