@@ -10,6 +10,9 @@ import seedu.address.commons.util.StringUtil;
  * and asserted in constructor
  */
 public class Module {
+
+    public static final String MESSAGE_CONSTRAINTS = "Module should contain one or more "
+            + "alphanumeric characters";
     public static final String VALIDATION_REGEX = "\\p{Alnum}+";
     private final String name;
 

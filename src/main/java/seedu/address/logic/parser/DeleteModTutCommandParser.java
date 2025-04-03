@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import seedu.address.logic.commands.DeleteModTutCommand;
@@ -20,18 +19,12 @@ public class DeleteModTutCommandParser implements Parser<DeleteModTutCommand> {
      * @throws ParseException if the user input does not conform to the expected format
      */
     public DeleteModTutCommand parse(String args) throws ParseException {
-        requireNonNull(args);
-        String keyword = args.trim();
-        if (keyword.isEmpty()) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteModTutCommand.MESSAGE_USAGE));
-        }
         try {
-            // assumes constructor parses "CS2103T-T01"
-            ModTutGroup modTutGroup = new ModTutGroup(keyword.toUpperCase());
+            ModTutGroup modTutGroup = ParserUtil.parseModTutGroup(args);
             return new DeleteModTutCommand(modTutGroup);
-        } catch (IllegalArgumentException e) {
-            throw new ParseException("Invalid ModTutGroup format. Expected format: MODULE-TUTORIAL", e);
+        } catch (ParseException pe) {
+            throw new ParseException(
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteModTutCommand.MESSAGE_USAGE), pe);
         }
     }
 }
