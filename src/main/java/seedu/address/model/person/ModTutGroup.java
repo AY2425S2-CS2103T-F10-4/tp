@@ -29,11 +29,12 @@ public class ModTutGroup {
     /**
      * Constructs a module - tutorial group with given {@code modTutGroup} transformed into uppercase.
      *
-     * @param modTutGroup valid module - tutorial group.
+     * @param modTutGroupCaseIgnore valid module - tutorial group.
      */
-    public ModTutGroup(String modTutGroup) {
-        requireNonNull(modTutGroup);
-        checkArgument(isValidModTutGroup(modTutGroup), MESSAGE_CONSTRAINTS);
+    public ModTutGroup(String modTutGroupCaseIgnore) {
+        requireNonNull(modTutGroupCaseIgnore);
+        checkArgument(isValidModTutGroup(modTutGroupCaseIgnore), MESSAGE_CONSTRAINTS);
+        String modTutGroup = modTutGroupCaseIgnore.toUpperCase();
         assert StringUtil.isUpperCase(modTutGroup) : "Module - Tutorial Group should be in uppercase";
         modTutGroupString = modTutGroup;
 

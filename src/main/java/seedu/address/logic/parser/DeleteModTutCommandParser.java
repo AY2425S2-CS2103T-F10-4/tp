@@ -33,9 +33,10 @@ public class DeleteModTutCommandParser implements Parser<DeleteModTutCommand> {
         }
 
         try {
-            return new DeleteModTutCommand(keyword.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ParseException("Invalid ModTutGroup format. Expected format: MODULE-TUTORIAL", e);
+            ModTutGroup modTutGroup = ParserUtil.parseModTutGroup(args);
+            return new DeleteModTutCommand(modTutGroup);
+        } catch (ParseException pe) {
+            throw new ParseException("Invalid ModTutGroup format. Expected format: MODULE-TUTORIAL", pe);
         }
     }
 }

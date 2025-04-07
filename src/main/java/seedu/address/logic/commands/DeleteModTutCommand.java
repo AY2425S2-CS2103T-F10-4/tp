@@ -25,14 +25,14 @@ public class DeleteModTutCommand extends Command {
     /** Success message displayed after the tutorial is deleted. */
     public static final String MESSAGE_DELETE_TUT_SUCCESS = "Tutorial Deleted: %1$s";
 
-    private final String modTutGroupName;
+    private final ModTutGroup modTutGroupName;
 
     /**
      * Constructs a DeleteModTutCommand with the specified ModTutGroup.
      *
      * @param modTutGroupName The tutorial group to delete from persons.
      */
-    public DeleteModTutCommand(String modTutGroupName) {
+    public DeleteModTutCommand(ModTutGroup modTutGroupName) {
         this.modTutGroupName = modTutGroupName;
     }
 
@@ -48,8 +48,8 @@ public class DeleteModTutCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        String moduleName = modTutGroupName.split("-")[0];
-        String tutorialName = modTutGroupName.split("-")[1];
+        String moduleName = modTutGroupName.getModule().toString();
+        String tutorialName = modTutGroupName.getTutorial().toString();
 
         if (!ModTutGroup.getModuleMap().containsKey(moduleName)) {
             throw new CommandException(String.format(MESSAGE_INVALID_MODULE_TUTORIAL_GROUP, modTutGroupName));
@@ -58,7 +58,7 @@ public class DeleteModTutCommand extends Command {
         if (!ModTutGroup.getModuleMap().get(moduleName).containsKey(tutorialName)) {
             throw new CommandException(String.format(MESSAGE_INVALID_MODULE_TUTORIAL_GROUP, modTutGroupName));
         }
-        model.deleteModTut(new ModTutGroup(modTutGroupName));
+        model.deleteModTut(new ModTutGroup(modTutGroupName.toString()));
         return new CommandResult(String.format(MESSAGE_DELETE_TUT_SUCCESS, modTutGroupName),
                 false, false, false);
     }

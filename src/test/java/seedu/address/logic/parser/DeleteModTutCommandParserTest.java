@@ -10,13 +10,15 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSucces
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.DeleteModTutCommand;
+import seedu.address.model.person.ModTutGroup;
 
 public class DeleteModTutCommandParserTest {
     private DeleteModTutCommandParser parser = new DeleteModTutCommandParser();
 
     @Test
     public void parse_validArgs_returnsDeleteModTutCommand() {
-        assertParseSuccess(parser, VALID_MODTUT_AMY, new DeleteModTutCommand(VALID_MODTUT_AMY));
+        ModTutGroup validModTut = new ModTutGroup(VALID_MODTUT_AMY);
+        assertParseSuccess(parser, VALID_MODTUT_AMY, new DeleteModTutCommand(validModTut));
     }
 
     @Test

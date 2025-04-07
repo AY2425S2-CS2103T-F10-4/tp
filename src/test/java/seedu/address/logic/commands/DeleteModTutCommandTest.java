@@ -13,6 +13,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.ModTutGroup;
 
 
 public class DeleteModTutCommandTest {
@@ -20,22 +21,23 @@ public class DeleteModTutCommandTest {
 
     @Test
     public void execute_invalidModTut_throwsCommandException() {
-        String nonExistentModTutGroup = "Invalid-TutGroup";
+        String nonExistentModTutGroupString = "Invalid-TutGroup";
+        ModTutGroup nonExistsModTutGroup = new ModTutGroup(nonExistentModTutGroupString);
 
-        DeleteModTutCommand deleteModTutCommand = new DeleteModTutCommand(nonExistentModTutGroup);
+        DeleteModTutCommand deleteModTutCommand = new DeleteModTutCommand(nonExistsModTutGroup);
 
         assertThrows(CommandException.class, () -> deleteModTutCommand.execute(model));
     }
 
     @Test
     public void equals() {
-        DeleteModTutCommand deleteModTutFirstCommand = new DeleteModTutCommand(VALID_MODTUT_AMY);
-        DeleteModTutCommand deleteModTutSecondCommand = new DeleteModTutCommand(VALID_MODTUT_BOB);
+        DeleteModTutCommand deleteModTutFirstCommand = new DeleteModTutCommand(new ModTutGroup(VALID_MODTUT_AMY));
+        DeleteModTutCommand deleteModTutSecondCommand = new DeleteModTutCommand(new ModTutGroup(VALID_MODTUT_BOB));
         //same object -> returns true
         assertTrue(deleteModTutFirstCommand.equals(deleteModTutFirstCommand));
 
         //same values -> returns true
-        DeleteModTutCommand deleteModTutFirstCommandCopy = new DeleteModTutCommand(VALID_MODTUT_AMY);
+        DeleteModTutCommand deleteModTutFirstCommandCopy = new DeleteModTutCommand(new ModTutGroup(VALID_MODTUT_AMY));
         assertTrue(deleteModTutFirstCommand.equals(deleteModTutFirstCommandCopy));
 
 
