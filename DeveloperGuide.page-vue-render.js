@@ -278,7 +278,7 @@ with(this){return _c('ol',[_c('li',[_c('p',[_v("User requests add contacts with 
 with(this){return _c('p',[_c('strong',[_v("Extensions")])])}
 },function anonymous(
 ) {
-with(this){return _c('ul',[_c('li',[_c('p',[_v("1a. ConnectS detects invalid parameter content.")]),_v(" "),_c('ul',[_c('li',[_c('p',[_v("1a1. ConnectS prompts user that entered parameter(s) is invalid.")]),_v(" "),_c('p',[_v("Use case resumes from step 1.")])])])]),_v(" "),_c('li',[_c('p',[_v("1b. ConnectS detects invalid ordering of parameter.")]),_v(" "),_c('ul',[_c('li',[_c('p',[_v("1a1. ConnectS prompts user to enter parameters in a given order.")]),_v(" "),_c('p',[_v("Use case resumes from step 1.")])])])])])}
+with(this){return _c('ul',[_c('li',[_c('p',[_v("1a. ConnectS detects invalid parameter content.")]),_v(" "),_c('ul',[_c('li',[_c('p',[_v("1a1. ConnectS prompts user that entered parameter(s) is invalid.")]),_v(" "),_c('p',[_v("Use case resumes from step 1.")])])])]),_v(" "),_c('li',[_c('p',[_v("1b. ConnectS detects invalid ordering of parameter.")]),_v(" "),_c('ul',[_c('li',[_c('p',[_v("1b1. ConnectS prompts user to enter parameters in a given order.")]),_v(" "),_c('p',[_v("Use case resumes from step 1.")])])])])])}
 },function anonymous(
 ) {
 with(this){return _c('h4',{attrs:{"id":"use-case-uc3-edit-a-contact"}},[_v("Use case: UC3 - Edit a contact"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#use-case-uc3-edit-a-contact","onclick":"event.stopPropagation()"}})])}
@@ -443,7 +443,7 @@ with(this){return _c('ol',[_c('li',[_c('p',[_v("Initial launch")]),_v(" "),_c('o
 with(this){return _c('h3',{attrs:{"id":"viewing-help"}},[_v("Viewing Help"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#viewing-help","onclick":"event.stopPropagation()"}})])}
 },function anonymous(
 ) {
-with(this){return _c('ol',[_c('li',[_v("While in ConnectS, enter "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("help")]),_v(" into the command box.\n"),_c('br'),_c('br'),_v("\nExpected: A pop-up message showing all commands appears for about 10 seconds\n"),_c('br'),_c('br')]),_v(" "),_c('li',[_v("To visit the user guide, click on the help button at the top of the application window. A small window will appear, click on Copy URL and paste into your preferred browser to visit the user guide.\n"),_c('br')])])}
+with(this){return _c('ol',[_c('li',[_v("While in ConnectS, enter "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("help")]),_v(" into the command box.\n"),_c('br'),_c('br'),_v("\nExpected: A pop-up message showing proper usage of all commands appears\n"),_c('br'),_c('br')]),_v(" "),_c('li',[_v("To visit the user guide, click on the help button at the top of the application window. A small window will appear, click on Copy URL and paste into your preferred browser to visit the user guide.\n"),_c('br')])])}
 },function anonymous(
 ) {
 with(this){return _c('h3',{attrs:{"id":"adding-a-tutee"}},[_v("Adding a tutee"),_c('a',{staticClass:"fa fa-anchor",attrs:{"href":"#adding-a-tutee","onclick":"event.stopPropagation()"}})])}
@@ -500,6 +500,6 @@ with(this){return _c('h3',{attrs:{"id":"saving-data"}},[_v("Saving Data"),_c('a'
 with(this){return _c('ol',[_c('li',[_c('p',[_v("Dealing with corrupted data file")]),_v(" "),_c('ol',[_c('li',[_c('p',[_v("Edit "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("ConnectS.json")]),_v(" in the data folder such that the data do not make sense for ConnectS. For example, removing the name field of any person.")])]),_v(" "),_c('li',[_c('p',[_v("Launch ConnectS from your terminal ("),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("java -jar “ConnectS.jar”")]),_v(")\n"),_c('br'),_c('br'),_v("\nExpected: All tutees are cleared from ConnectS\n"),_c('br'),_c('br')])])])]),_v(" "),_c('li',[_c('p',[_v("Dealing with missing data file")]),_v(" "),_c('ol',[_c('li',[_c('p',[_v("Delete "),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("ConnectS.json")])])]),_v(" "),_c('li',[_c('p',[_v("Launch ConnectS from your terminal ("),_c('code',{pre:true,attrs:{"class":"hljs inline no-lang"}},[_v("java -jar “ConnectS.jar”")]),_v(")\n"),_c('br'),_c('br'),_v("\nExpected: ConnectS is repopulated with sample tutees\n"),_c('br')])])])])])}
 },function anonymous(
 ) {
-with(this){return _c('footer',[_c('div',{staticClass:"text-center"},[_c('small',[_v("["),_c('span',[_c('strong',[_v("Powered by")])]),_v(" "),_c('img',{attrs:{"src":"https://markbind.org/favicon.ico","width":"30"}}),_v(" "),_c('a',{attrs:{"href":"https://markbind.org/"}},[_v("MarkBind 5.6.0")]),_v(", generated on Mon, 7 Apr 2025, 22:23:18 GMT+8]")])])])}
+with(this){return _c('footer',[_c('div',{staticClass:"text-center"},[_c('small',[_v("["),_c('span',[_c('strong',[_v("Powered by")])]),_v(" "),_c('img',{attrs:{"src":"https://markbind.org/favicon.ico","width":"30"}}),_v(" "),_c('a',{attrs:{"href":"https://markbind.org/"}},[_v("MarkBind 5.6.0")]),_v(", generated on Mon, 7 Apr 2025, 22:24:50 GMT+8]")])])])}
 }];
   
