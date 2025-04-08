@@ -18,108 +18,617 @@
 </p></b><p></p> <p>How the <code class="hljs inline no-lang">Logic</code> component works:</p> <ol><li>When <code class="hljs inline no-lang">Logic</code> is called upon to execute a command, it is passed to an <code class="hljs inline no-lang">AddressBookParser</code> object which in turn creates a parser that matches the command (e.g., <code class="hljs inline no-lang">DeleteCommandParser</code>) and uses it to parse the command.</li> <li>This results in a <code class="hljs inline no-lang">Command</code> object (more precisely, an object of one of its subclasses e.g., <code class="hljs inline no-lang">DeleteCommand</code>) which is executed by the <code class="hljs inline no-lang">LogicManager</code>.</li> <li>The command can communicate with the <code class="hljs inline no-lang">Model</code> when it is executed (e.g. to delete a person).<br>
 Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the <code class="hljs inline no-lang">Model</code>) to achieve.</li> <li>The result of the command execution is encapsulated as a <code class="hljs inline no-lang">CommandResult</code> object which is returned back from <code class="hljs inline no-lang">Logic</code>.</li></ol> <p>Here are the other classes in <code class="hljs inline no-lang">Logic</code> (omitted from the class diagram above) that are used for parsing a user command:</p> <span class="image-wrapper"><img src="/tp/diagrams/ParserClasses.png" width="600" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span> <p>How the parsing works:</p> <ul><li>When called upon to parse a user command, the <code class="hljs inline no-lang">AddressBookParser</code> class creates an <code class="hljs inline no-lang">XYZCommandParser</code> (<code class="hljs inline no-lang">XYZ</code> is a placeholder for the specific command name e.g., <code class="hljs inline no-lang">AddCommandParser</code>) which uses the other classes shown above to parse the user command and create a <code class="hljs inline no-lang">XYZCommand</code> object (e.g., <code class="hljs inline no-lang">AddCommand</code>) which the <code class="hljs inline no-lang">AddressBookParser</code> returns back as a <code class="hljs inline no-lang">Command</code> object.</li> <li>All <code class="hljs inline no-lang">XYZCommandParser</code> classes (e.g., <code class="hljs inline no-lang">AddCommandParser</code>, <code class="hljs inline no-lang">DeleteCommandParser</code>, ...) inherit from the <code class="hljs inline no-lang">Parser</code> interface so that they can be treated similarly where possible e.g, during testing.</li></ul> <h3 id="model-component">Model component<a href="#model-component" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p><strong>API</strong> : <a href="https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java"><code class="hljs inline no-lang">Model.java</code></a></p> <span class="image-wrapper"><img src="/tp/diagrams/ModelClassDiagram.png" width="450" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span> <p>The <code class="hljs inline no-lang">Model</code> component,</p> <ul><li>stores the address book data i.e., all <code class="hljs inline no-lang">Person</code> objects (which are contained in a <code class="hljs inline no-lang">UniquePersonList</code> object).</li> <li>stores the currently 'selected' <code class="hljs inline no-lang">Person</code> objects (e.g., results of a search query) as a separate <em>filtered</em> list which is exposed to outsiders as an unmodifiable <code class="hljs inline no-lang">ObservableList&lt;Person&gt;</code> that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.</li> <li>stores a <code class="hljs inline no-lang">UserPref</code> object that represents the user’s preferences. This is exposed to the outside as a <code class="hljs inline no-lang">ReadOnlyUserPref</code> objects.</li> <li>does not depend on any of the other three components (as the <code class="hljs inline no-lang">Model</code> represents data entities of the domain, they should make sense on their own without depending on other components)</li></ul> <div class="alert box-container seamless" data-v-474166ec><!----> <div class="header-and-body" data-v-474166ec><!----> <div class="box-body-wrapper" data-v-474166ec><div class="icon-wrapper  text-info" data-v-474166ec><i class="fas fa-info" data-v-474166ec></i></div> <div aria-hidden="true" class="vertical-divider alert-info" data-v-474166ec></div> <div class="contents" data-v-474166ec><p data-v-474166ec><strong data-v-474166ec>Note:</strong> An alternative (arguably, a more OOP) model is given below. It has a <code class="hljs inline no-lang" data-v-474166ec>Tag</code> and <code class="hljs inline no-lang" data-v-474166ec>ModTutGroup</code> list in the <code class="hljs inline no-lang" data-v-474166ec>AddressBook</code>, which <code class="hljs inline no-lang" data-v-474166ec>Person</code> references. This allows <code class="hljs inline no-lang" data-v-474166ec>AddressBook</code> to only require one <code class="hljs inline no-lang" data-v-474166ec>Tag</code> object per unique tag as well as only one <code class="hljs inline no-lang" data-v-474166ec>ModTutGroup</code> per unique <code class="hljs inline no-lang" data-v-474166ec>ModTutGroup</code> object, instead of each <code class="hljs inline no-lang" data-v-474166ec>Person</code> needing their own <code class="hljs inline no-lang" data-v-474166ec>Tag</code> or <code class="hljs inline no-lang" data-v-474166ec>ModTutGroup</code> objects.<br data-v-474166ec></p> <span class="image-wrapper"><img src="/tp/diagrams/BetterModelClassDiagram.png" width="450" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span></div> <!----></div></div></div> <h3 id="storage-component">Storage component<a href="#storage-component" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p><strong>API</strong> : <a href="https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java"><code class="hljs inline no-lang">Storage.java</code></a></p> <span class="image-wrapper"><img src="/tp/diagrams/StorageClassDiagram.png" width="550" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span> <p>The <code class="hljs inline no-lang">Storage</code> component,</p> <ul><li>can save both address book data and user preference data in JSON format, and read them back into corresponding objects.</li> <li>inherits from both <code class="hljs inline no-lang">AddressBookStorage</code> and <code class="hljs inline no-lang">UserPrefStorage</code>, which means it can be treated as either one (if only the functionality of only one is needed).</li> <li>depends on some classes in the <code class="hljs inline no-lang">Model</code> component (because the <code class="hljs inline no-lang">Storage</code> component's job is to save/retrieve objects that belong to the <code class="hljs inline no-lang">Model</code>)</li></ul> <h3 id="common-classes">Common classes<a href="#common-classes" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p>Classes used by multiple components are in the <code class="hljs inline no-lang">seedu.address.commons</code> package.</p> <hr> <h2 id="implementation"><strong>Implementation</strong><a href="#implementation" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h2> <p>This section describes some noteworthy details on how certain features are implemented.</p> <h3 id="change-view-mode">Change View Mode<a href="#change-view-mode" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p>The &quot;View All&quot; button changes the view mode to &quot;View All&quot;, if it is not already in &quot;View All&quot;</p> <span class="image-wrapper"><img src="/tp/diagrams/ViewAllSequenceDiagram.png" alt="View All Sequence Diagram" width="" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span> <p>The &quot;View Tabs&quot; button works similarly, changing the view mode to &quot;View Tabs&quot;, if it is not already in &quot;View Tabs&quot;</p> <span class="image-wrapper"><img src="/tp/diagrams/ViewTabsSequenceDiagram.png" alt="View Tabs Sequence Diagram" width="" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span> <p>In order to maintain a similar architecture to the original AB3, new methods such as <code class="hljs inline no-lang">setViewAll()</code> have been implemented.</p> <h3 id="find-command">Find Command<a href="#find-command" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p>The find command only allows for one field of information to be used as a query keyword at a time. The <code class="hljs inline no-lang">FindCommandParser</code>
 parses the keyword and creates an appropriate subclass of the abstract class <code class="hljs inline no-lang">FieldContainsKeywordPredicate</code>. This predicate subclass
-is then passed on to the <code class="hljs inline no-lang">ModelManager</code> class which uses it to filter the list which the user then sees.</p> <span class="image-wrapper"><img src="/tp/diagrams/FindActivityDiagram.png" alt="Find Activity Diagram" width="" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span> <h3 id="sort-tutees-feature">Sort tutees feature<a href="#sort-tutees-feature" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p>The sort tutees feature allow the user to sort the entire list of tutees by their names in lexicographical order.</p> <p>The behaviour of the sort feature can be seen below.</p> <span class="image-wrapper"><img src="/tp/diagrams/SortSequenceDiagram.png" alt="Sort Sequence Diagram" width="" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span> <h3 id="pin-a-tutee-feature">Pin a Tutee feature<a href="#pin-a-tutee-feature" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p>The pinning feature allows the user to pin a tutee to the top of the list.</p> <p>The behaviour of the pinning feature can be seen below.</p> <span class="image-wrapper"><img src="/tp/diagrams/PinSequenceDiagram.png" alt="Pin Sequence Diagram" width="" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span> <hr> <h2 id="documentation-logging-testing-configuration-dev-ops"><strong>Documentation, logging, testing, configuration, dev-ops</strong><a href="#documentation-logging-testing-configuration-dev-ops" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h2> <ul><li><a href="/tp/Documentation.html">Documentation guide</a></li> <li><a href="/tp/Testing.html">Testing guide</a></li> <li><a href="/tp/Logging.html">Logging guide</a></li> <li><a href="/tp/Configuration.html">Configuration guide</a></li> <li><a href="/tp/DevOps.html">DevOps guide</a></li></ul> <hr> <h2 id="appendix-requirements"><strong>Appendix: Requirements</strong><a href="#appendix-requirements" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h2> <h3 id="product-scope">Product scope<a href="#product-scope" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p><strong>Target user profile</strong>:</p> <p>Computing Student TAs who...</p> <ul><li>teach multiple modules</li> <li>have multiple tutorial groups
-<ul><li>have multiple groups within a tutorial group</li></ul></li> <li>have to manage reviewing their tutees’ projects/code</li> <li>keep track of relevant professors</li></ul> <p><strong>Value proposition</strong>: Allows computing students to quickly sort contacts and grab information. Optimised for typing instead of mouse. Simplify managing social life. Allows TAs to group their tutees by course and tutorial group.</p> <h3 id="user-stories">User stories<a href="#user-stories" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p>Priorities: High (must have) - <code class="hljs inline no-lang">* * *</code>, Medium (nice to have) - <code class="hljs inline no-lang">* *</code>, Low (unlikely to have) - <code class="hljs inline no-lang">*</code></p> <div class="table-responsive"><table class="markbind-table table table-bordered table-striped"><thead><tr><th>Priority</th> <th>As a …​</th> <th>I want to …​</th> <th>So that…​</th></tr></thead> <tbody><tr><td><code class="hljs inline no-lang">* * *</code></td> <td>new user</td> <td>easily find instructions on commands that I need to use</td> <td>I can quickly lookup the commands I want</td></tr> <tr><td><code class="hljs inline no-lang">* * *</code></td> <td>impatient user</td> <td>see my contacts with all its details</td> <td>I can have a clear picture of all my contacts</td></tr> <tr><td><code class="hljs inline no-lang">* * *</code></td> <td>forgetful user</td> <td>add a contact to a list with a name</td> <td>I can store information related to the contact</td></tr> <tr><td><code class="hljs inline no-lang">* * *</code></td> <td>forgetful user</td> <td>add telegram handles to a contact</td> <td>I can look it up when I forget, since telegram is popular amongst university students</td></tr> <tr><td><code class="hljs inline no-lang">* * *</code></td> <td>forgetful user</td> <td>add email to a contact</td> <td>I can look it up when I forget</td></tr> <tr><td><code class="hljs inline no-lang">* * *</code></td> <td>forgetful user</td> <td>add tutorial groups to a contact</td> <td>I can see which group a student belongs to when I forget</td></tr> <tr><td><code class="hljs inline no-lang">* * *</code></td> <td>forgetful user</td> <td>add modules to a contact</td> <td>I can see which module a student belongs to when I forget</td></tr> <tr><td><code class="hljs inline no-lang">* * *</code></td> <td>clumsy user</td> <td>delete a contact</td> <td>I can remove contacts I accidentally added/don't need</td></tr> <tr><td><code class="hljs inline no-lang">* * *</code></td> <td>user that prefers typing</td> <td>perform all commands by typing instead of using a mouse to click</td> <td>I can execute commands faster because i type faster than i use a mouse to click</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>busy user</td> <td>find contacts quickly with some of his incomplete information key in to the search bar</td> <td>I do not waste time on the nitty-gritty</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>frequent user</td> <td>pin important contacts on the top</td> <td>I can easily find them</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>impatient user</td> <td>see my contacts by name</td> <td>I can read more contacts simultaneously</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>new user</td> <td>have a guided tour of the basic commands</td> <td>I can start using the app without needing to look up the commands</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>TA of multiple courses</td> <td>easily group contacts based on tutorial group</td> <td>I can find my students' contacts easily</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>TA of multiple courses</td> <td>easily group contacts based on module</td> <td>I can find my students' contacts easily</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>user that values efficiency</td> <td>edit an existing contact's information</td> <td>I can save time not needing to delete and make a new contact</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>user that values efficiency</td> <td>easily find the commands I need by typing in a command to list all commands</td> <td>I don't have to navigate to an external guide</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>TA that values efficiency</td> <td>easily delete multiple contacts at once by giving a common module/tutorial</td> <td>I don't waste time deleting contacts one by one</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>user who likes to keep things ordered</td> <td>sort my contacts by alphabetical order (or any specific order)</td> <td>everything is clear at a glance</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>user who's switching phone</td> <td>be able to load all my contacts easily</td> <td>I don't have to add them in again</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>user with many contacts</td> <td>find contacts by email</td> <td>I know who emailed me or forgot who the email belongs to</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>user with many contacts</td> <td>find contacts by telegram handle</td> <td>I can find out who the handle belongs to</td></tr> <tr><td><code class="hljs inline no-lang">* *</code></td> <td>user with many contacts</td> <td>tag contacts based on their relationship to me</td> <td>I can tell from a quick glance the type of contact I'm reading</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>advanced user</td> <td>create my own shortcuts in command line</td> <td>I can execute commands that I use often or commands that are very long faster</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>forgetful user</td> <td>set a custom timer for a notification before a contact's birthday</td> <td>I am reminded to prepare for it</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>new user</td> <td>have an autocomplete function predict my typing and show me the potential options</td> <td>I can use the command even if I'm unsure of the exact structure</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>new user</td> <td>see suggestions for commands when I input them wrong</td> <td>I can quickly correct my mistake instead of needing to refer to another source</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>new user that prefers to learn visually</td> <td>watch a video showing the features and functionalities of the product</td> <td>I can learn better</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>new user who has a lot of contacts to add</td> <td>have a command to efficiently add multiple contacts at once or be able to load contacts from phone contacts</td> <td>I don't waste a lot of time adding multiple contacts as a new user starting with 0 contacts</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>user that values efficiency</td> <td>type a quick command and automatically navigate to my contact's email client to write a message to the client</td> <td>I can save time navigating to my email client and then copying the email in</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>user that values efficiency</td> <td>type a quick command and automatically call a contact's phone on a phone or messenger app</td> <td>I can save time navigating to the appropriate app and typing out their phone number</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>user that values efficiency</td> <td>see my commonly searched contacts at the top of the list</td> <td>I don't waste time searching for contacts</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>user who has many friends in the contacts</td> <td>store their birthday and get a notification on that day</td> <td>I can send them a message or make a phone call, and don't have to remember so many different birthday dates</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>user with a lot of contacts</td> <td>hide certain types of contact information when looking at the overall list</td> <td>the list view is smaller and not clogged with information I don't use often</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>busy user</td> <td>type a quick command to paste information to a contact</td> <td>I can speed up transferring a contact's information</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>busy user</td> <td>type a quick command to copy a contact's specific details</td> <td>I can speed up transferring a contact's information</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>frequent user</td> <td>schedule deletion of contacts at a specific date</td> <td>My contacts are not cluttered with contacts I don't need in case i forget to delete</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>long-time user</td> <td>delete a specific tag</td> <td>I can delete some tags that no longer matter to me</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>user that values efficiency</td> <td>press a button to reinput the last executed command into the CLI</td> <td>I can save time if I'm inputting multiple similar commands</td></tr> <tr><td><code class="hljs inline no-lang">*</code></td> <td>user that values efficiency</td> <td>select many users at a time then add a tag to all of them</td> <td>I don't have to do the same thing again and again</td></tr></tbody></table></div><p><em>{More to be added}</em></p> <h3 id="use-cases">Use cases<a href="#use-cases" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <h4 id="use-case-f1-find-contact-by-keyword">Use case: F1 - Find contact by keyword<a href="#use-case-f1-find-contact-by-keyword" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User requests a list of contacts matching given keyword(s).</p></li> <li><p>ConnectS shows a list of filtered contacts.</p> <p>Use case ends.</p></li></ol> <h4 id="use-case-f2-filter-contacts-using-view-tabs">Use case: F2 - Filter contacts using view tabs<a href="#use-case-f2-filter-contacts-using-view-tabs" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User requests to change the view tab to a specified module-tutorial group.</p></li> <li><p>ConnectS changes the view tab to the specified group.</p> <p>Use case ends.</p></li></ol> <p><strong>Extensions</strong></p> <ul><li><p>1a. The module-tutorial group provided does not exist.</p> <ul><li><p>1a1. ConnectS prompts the user that they are looking for a non-existent view tab.</p> <p>Use case resumes from step 1.</p></li></ul></li></ul> <h4 id="use-case-f3-see-all-contacts-using-view-all-tab">Use case: F3 - See all contacts using view all tab<a href="#use-case-f3-see-all-contacts-using-view-all-tab" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User requests to change the view tab to a view all contacts.</p></li> <li><p>ConnectS changes the view tab to all contacts.</p> <p>Use case ends.</p></li></ol> <h4 id="use-case-uc1-show-list-of-contacts">Use case: UC1 - Show list of contacts<a href="#use-case-uc1-show-list-of-contacts" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User requests to list contacts.</p></li> <li><p>ConnectS shows a list of contacts.</p> <p>Use case ends.</p></li></ol> <p><strong>Extensions</strong></p> <ul><li><p>2a. The list is empty.</p> <p>Use case ends.</p></li></ul> <h4 id="use-case-uc2-add-a-contact">Use case: UC2 - Add a contact<a href="#use-case-uc2-add-a-contact" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User requests add contacts with name, telegram handle, email, module and tutorial group.</p></li> <li><p>ConnectS adds contact.</p> <p>Use case ends.</p></li></ol> <p><strong>Extensions</strong></p> <ul><li><p>1a. ConnectS detects invalid parameter content.</p> <ul><li><p>1a1. ConnectS prompts user that entered parameter(s) is invalid.</p> <p>Use case resumes from step 1.</p></li></ul></li> <li><p>1b. ConnectS detects invalid ordering of parameter.</p> <ul><li><p>1b1. ConnectS prompts user to enter parameters in a given order.</p> <p>Use case resumes from step 1.</p></li></ul></li></ul> <h4 id="use-case-uc3-edit-a-contact">Use case: UC3 - Edit a contact<a href="#use-case-uc3-edit-a-contact" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User chooses a list of contacts to view (<a href="#use-case-f1---find-contact-by-keyword">F1</a>, <a href="#use-case-f2---filter-contacts-using-view-tabs">F2</a> or <a href="#use-case-f3---see-all-contacts-using-view-all-tab">F3</a>).</p></li> <li><p>User requests to edit a specific contact in the list.</p></li> <li><p>ConnectS edits the contact.</p> <p>Use case ends.</p></li></ol> <p><strong>Extensions</strong></p> <ul><li><p>1a. The list is empty.</p> <p>Use case ends.</p></li> <li><p>2a. The given index is invalid.</p> <ul><li><p>2a1. ConnectS prompts user to enter a valid index.</p> <p>Use case resumes at step 2.</p></li></ul></li> <li><p>2b. The edits requested are invalid.</p> <ul><li><p>2b1. ConnectS prompts user to enter a valid edit request.</p> <p>Use case resumes at step 2.</p></li></ul></li> <li><p>2c. The edits result in the edited contact becoming the same as an already existing contact.</p> <ul><li><p>2c1. ConnectS prompts user that such a contact already exists.</p> <p>Use case resumes at step 2.</p></li></ul></li></ul> <h4 id="use-case-uc4-delete-a-contact">Use case: UC4 - Delete a contact<a href="#use-case-uc4-delete-a-contact" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User chooses a list of contacts to view (<a href="#use-case-f1---find-contact-by-keyword">F1</a>, <a href="#use-case-f2---filter-contacts-using-view-tabs">F2</a> or <a href="#use-case-f3---see-all-contacts-using-view-all-tab">F3</a>).</p></li> <li><p>User requests to delete a specific contact in the list.</p></li> <li><p>ConnectS deletes the contact.</p> <p>Use case ends.</p></li></ol> <p><strong>Extensions</strong></p> <ul><li><p>1a. The list is empty.</p> <p>Use case ends.</p></li> <li><p>2a. The given index is invalid.</p> <ul><li><p>2a1. ConnectS prompts user to enter a valid index.</p> <p>Use case resumes at step 2.</p></li></ul></li></ul> <h4 id="use-case-uc5-delete-a-module-tutorial">Use case: UC5 - Delete a module/tutorial<a href="#use-case-uc5-delete-a-module-tutorial" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User requests to delete an entire module or tutorial from all contacts.</p></li> <li><p>ConnectS deletes the module/tutorial from all contacts and deletes contacts left without any module-tutorial group.</p> <p>Use case ends.</p></li></ol> <p><strong>Extensions</strong></p> <ul><li><p>1a. The given module/tutorial does not exist.</p> <ul><li>1a1. ConnectS prompts user that the module/tutorial they requested does not exist.</li></ul> <p>Use case resumes from step 1.</p></li></ul> <h4 id="use-case-uc6-sort-contacts">Use case: UC6 - Sort contacts<a href="#use-case-uc6-sort-contacts" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User requests to sort contacts by lexicographical order.</p></li> <li><p>ConnectS sorts contacts by lexicographical order.</p> <p>Use case ends.</p></li></ol> <h4 id="use-case-uc7-pin-unpin-a-contact">Use case: UC7 - Pin/unpin a contact<a href="#use-case-uc7-pin-unpin-a-contact" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User chooses a list of contacts to view (<a href="#use-case-f1---find-contact-by-keyword">F1</a>, <a href="#use-case-f2---filter-contacts-using-view-tabs">F2</a> or <a href="#use-case-f3---see-all-contacts-using-view-all-tab">F3</a>).</p></li> <li><p>User requests to pin/unpin a specific contact in the list.</p></li> <li><p>ConnectS pins/unpins the contact.</p> <p>Use case ends.</p></li></ol> <p><strong>Extensions</strong></p> <ul><li><p>1a. The list is empty.</p> <p>Use case ends.</p></li> <li><p>2a. The given index is invalid.</p> <ul><li><p>2a1. ConnectS prompts user to enter a valid index.</p> <p>Use case resumes at step 2.</p></li></ul></li></ul> <h4 id="use-case-uc8-clear-all-contacts">Use case: UC8 - Clear all contacts<a href="#use-case-uc8-clear-all-contacts" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h4> <p><strong>System: ConnectS</strong></p> <p><strong>Actor: User</strong></p> <p><strong>MSS:</strong></p> <ol><li><p>User requests to delete all contacts.</p></li> <li><p>ConnectS deletes all contacts.</p> <p>Use case ends.</p></li></ol> <p><strong>Extensions</strong></p> <ul><li><p>1a. There are no contacts in ConnectS.</p> <p>Use case ends.</p></li></ul> <h3 id="non-functional-requirements">Non-Functional Requirements<a href="#non-functional-requirements" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>Should work on any <em>mainstream OS</em> as long as it has Java <code class="hljs inline no-lang">17</code> or above installed.</li> <li>Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.</li> <li>A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.</li> <li>The product should be for a single user.</li> <li>The data should be stored locally and should be in a human editable text file.</li> <li>The software should work without requiring an installer.</li> <li>The software should not depend on a remote server.</li> <li>The GUI should work well for standard screen resolutions 1920x1080 and higher, and, for screen scales 100% and 125%.</li> <li>The GUI should be usable (i.e., all functions can be used even if the user experience is not optimal) for, resolutions 1280x720 and higher, and, for screen scales 150%.</li></ol> <h3 id="glossary">Glossary<a href="#glossary" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ul><li><strong>Computing Student</strong>: A student in a computer-related course (e.g. Computer Science, Information Technology, Information Security)</li> <li><strong>TA</strong>: Teaching Assistant</li> <li><strong>Module</strong>: A course subject that the TA is teaching (e.g. Intro to programming, Calculus, Discrete Maths)</li> <li><strong>Tutee</strong>: A person who receives tutoring from the TA</li> <li><strong>Mainstream OS</strong>: Windows, Linux, Unix, MacOS</li> <li><strong>Typical usage</strong>: Common operations a user will perform. (e.g., viewing and adding contacts)</li> <li><strong>Above Average Typing Speed</strong>: A typing speed above the average typing speed of around 40 words per minute</li> <li><strong>Human editable text file</strong>: A file format that can be read and modified with a standard text editor (e.g., <code class="hljs inline no-lang">.txt</code> and <code class="hljs inline no-lang">.json</code>)</li> <li><strong>Remote Server</strong>: Any server hosted over the network to store and access data.</li> <li><strong>Screen scales</strong>: The scaling factor that determines how much the screen content on the GUI should be enlarged</li></ul> <hr> <h2 id="appendix-effort"><strong>Appendix: Effort</strong><a href="#appendix-effort" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h2> <h3 id="difficulty-level">Difficulty Level<a href="#difficulty-level" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ul><li>Upon AB3, we updated some fields of contacts and created several new functions. This is relatively
-challenging given the complexity of some specific functions created.</li> <li>In addition, A new GUI is created. It was difficult given the difference between
-the new-added GUI and the original AB3 GUI.</li></ul> <h3 id="challenges">Challenges<a href="#challenges" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ul><li>Extending the GUI to support View Tabs mode where contacts can be viewed in a dual-tab view for modules and tutorials
-was challenging as we were new to JavaFX and had to spend much time acquiring a deeper understanding of JavaFX as well
-as the existing UI implementation.</li> <li>Ensuring that the view tabs UI mode is well integrated with existing features that work based on indexes of
-the current list. <br>These features include the <code class="hljs inline no-lang">pin</code>, <code class="hljs inline no-lang">unpin</code>, <code class="hljs inline no-lang">delete</code> and <code class="hljs inline no-lang">edit</code> commands.
-<ul><li>An example of an integration bug we faced is that <code class="hljs inline no-lang">delete 1</code> would delete the first person in View All mode rather
-than the first person in the current Module-Tutorial tab (in View Tabs mode).</li> <li>We faced a number of bugs from the integration and required much time to fix by making sure that features can
-work with the individual Module-Tutorial tab that user is currently in.</li></ul></li></ul> <h3 id="effort-required">Effort Required<a href="#effort-required" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ul><li>One of the more time-consuming areas was in implementing the GUI and logic to include viewing contacts in a dual-tab view
-for modules and tutorials. This was especially so as the tabs had to be layered, and the indexing logic was affected.</li> <li>Additionally, since we wanted to adhere to the same architecture as AB3, a substantial amount of time and effort was spent
-on studying the behaviour of the code.</li></ul> <h3 id="achievements">Achievements<a href="#achievements" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ul><li>Compared to AB3, ConnectS has a new UI feature in its module and tutorial tabs, allowing for automatic sorting of
-contacts into groups upon adding. There are also new view commands to allow switching between these UI tabs using the CLI.</li> <li>Unlike AB3, ConnectS allows for deleting contacts en masse by deleting entire modules and tutorials at a time.</li> <li>ConnectS has an expanded find feature which allows for searching for a contact using telegram handle and email
-in addition to name. The find feature also finds based on incomplete keywords unlike AB3, which needed a complete match.</li> <li>ConnectS has a new sorting feature that orders contacts in lexicographical order, unlike AB3 where they were just ordered
-on when the contact was added.</li> <li>ConnectS has a new pinning feature which allows for the pinning of a specified contact at the top of the list. The
-pinned contact is also visually distinct, and not affected by sorting.</li></ul> <hr> <h2 id="appendix-planned-enhancements"><strong>Appendix: Planned Enhancements</strong><a href="#appendix-planned-enhancements" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h2> <p><strong>ConnectS is made by a team of 4.</strong></p> <ol><li><strong>Allow for more flexible name restrictions:</strong> Currently, ConnectS only supports alphanumeric characters in names. This could be
-problematic as there are names that don't fit these restrictions. We plan to expand the restrictions to allow for foreign characters, or other characters such as <code class="hljs inline no-lang">-</code> and <code class="hljs inline no-lang">.</code>.</li> <li><strong>Improve on the collapsing contact feature:</strong> Currently, contacts can be collapsed to show just the name by clicking on a triangle in the contact bar.
-This does not fit well into the CLI-focused app. We plan to introduce a command to allow for collapsing/expanding of the contact bar using the CLI.</li> <li><strong>Improve handling of large amounts of tabs:</strong> Currently, if many modules or tutorials are added, the module/tutorial tabs may overflow and result
-in only a portion of the tabs being visible. This problem could be made worse if the window is resized to be smaller. We plan on introducing
-tabs that shrink when there is no more space, or a scroll bar for the tabs.</li> <li><strong>Allow for more flexible tag restrictions:</strong> Currently, tags only allow for one word. This is not very flexible, as users may wish to tag with short phrases.
-We plan to allow multiple words in a tag within a given limit.</li> <li><strong>Allow view command to search by module:</strong> Currently, view command needs the full module-tutorial group as input. This limits
-its usefulness as users may often want to see a module tab, but are unsure of the specific tutorials. We plan to expand the view command
-to switch to a module tab using only the module as input.</li> <li><strong>Improve duplicate person error message:</strong> Currently, if a duplicate person is added or edited in, the thrown error message simply mentions
-that a person with the same name/telegram handle/email already exists. This is limited in usefulness as the user doesn't know which field(s) are the same.
-We plan to make the message more specific in identifying which field(s) are duplicated.</li> <li><strong>Improve find command validation:</strong> Currently, find command does not use the field regex to validate inputs in order to allow for partial searching. This causes
-a potential issue where a command such as <code class="hljs inline no-lang">find n/Ada tt/@ada</code> would be valid and interpreted as finding a name of <code class="hljs inline no-lang">n/Ada tt/@ada</code>, instead of recognising
-the typo and attempted invalid use of two keyword fields. We plan to change the prefix <code class="hljs inline no-lang"> PREFIX/</code> to have spaces on both sides to prevent this situation.</li> <li><strong>Improve edit command error messaging:</strong> Currently, if you input something like <code class="hljs inline no-lang">edit 1 aaaaa</code>, ConnectS will give an invalid index error. However, an
-invalid field/prefix error would be more appropriate. We plan to make these cases have a separate field error message.</li></ol> <hr> <h2 id="appendix-instructions-for-manual-testing"><strong>Appendix: Instructions for manual testing</strong><a href="#appendix-instructions-for-manual-testing" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h2> <p>Given below are instructions to test the app manually.</p> <div class="alert box-container seamless" data-v-474166ec><!----> <div class="header-and-body" data-v-474166ec><!----> <div class="box-body-wrapper" data-v-474166ec><div class="icon-wrapper  text-info" data-v-474166ec><i class="fas fa-info" data-v-474166ec></i></div> <div aria-hidden="true" class="vertical-divider alert-info" data-v-474166ec></div> <div class="contents" data-v-474166ec><p data-v-474166ec><strong data-v-474166ec>Note:</strong> These instructions only provide a starting point for testers to work on;
-testers are expected to do more <em data-v-474166ec>exploratory</em> testing.</p></div> <!----></div></div></div> <h3 id="launch-and-shutdown">Launch and shutdown<a href="#launch-and-shutdown" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li><p>Initial launch</p> <ol><li>Download the jar file ConnectS.jar and copy into an empty folder</li> <li>Launch the jar file from terminal by running this command:<code class="hljs inline no-lang">java -jar &quot;ConnectS.jar</code> <br><br>
-Expected: Shows the GUI with some sample tutees. The window size may not be optimum
-<br><br></li></ol></li> <li><p>Saving window preferences</p> <ol><li>Resize the window to an optimum size. Move the window to a different location. Close the window.</li> <li>Re-launch the app from your terminal.
-<br><br>
-Expected: The most recent window size and location is retained.
-<br><br></li></ol></li> <li><p>Viewing All and Viewing Tabs</p> <ol><li>Click on the View button at the top of the application window, select either View All or View Tabs to toggle between the two different views.</li></ol></li> <li><p>Exiting Application</p> <ol><li>Enter <code class="hljs inline no-lang">exit</code> into the command box.
-<br><br>
-Expected: The application will close
-<br></li></ol></li></ol> <h3 id="viewing-help">Viewing Help<a href="#viewing-help" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>While in ConnectS, enter <code class="hljs inline no-lang">help</code> into the command box.
-<br><br>
-Expected: A pop-up message showing proper usage of all commands appears
-<br><br></li> <li>To visit the user guide, click on the help button at the top of the application window. A small window will appear, click on Copy URL and paste into your preferred browser to visit the user guide.
-<br></li></ol> <h3 id="adding-a-tutee">Adding a tutee<a href="#adding-a-tutee" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>Add a tutee to connectS
-<ol><li>Sample: <code class="hljs inline no-lang">add n/Peter Parker t/@iamnotspidey e/peter@example.com m/CS2103T-T01</code> <br><br>
-Expected: A new person with name Peter Parker, telegram handle @iamnotspidey, email <a href="mailto:peter@example.com">peter@example.com</a> and a module CS2103T-T01 is added to the correct module and tutorial tab.
-<br><br></li> <li>Sample: <code class="hljs inline no-lang">add n/Tony Stark t/@iamnotironman e/stark@example.com m/CS2103T-T01 tag/Rich</code> <br><br>
-Expected: A new person with name Tony Stark, telegram handle @iamnotironman, email <a href="mailto:stark@example.com">stark@example.com</a>, a module CS2103T-T01 and a tag of Rich is added
-<br><br></li> <li>Sample: <code class="hljs inline no-lang">add n/Steve Rogers e/cap@example.com t/@iamnotold m/CS2103T-T01 m/CS2106-T01 tag/Young tag/Captain</code> <br><br>
-Expected: A new person with name steve rogers, telegram handle @iamnotold, email <a href="mailto:cap@example.com">cap@example.com</a>, 2 module CS2103T-T01 and CS2106-T01 and 2 tags of Young and Captain is added
-<br><br></li> <li>Invalid Sample: <code class="hljs inline no-lang">add [Duplicate name, email, or telegram handle]</code> <br><br>
-Expected: Error message indicating person already exists in ConnectS
-<br></li></ol></li></ol> <h3 id="finding-a-tutee">Finding a Tutee<a href="#finding-a-tutee" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>Finds a tutee
-<ol><li><p>Finding by name: <code class="hljs inline no-lang">find n/Pete Rogers</code> <br><br>
-Expected: All found tutees with name matching “Pete” or “Rogers” are listed
-<br><br></p></li> <li><p>Finding by telegram handle: <code class="hljs inline no-lang">find t/@iamnot</code> <br><br>
-Expected: All found tutees with telegram handle matching “@iamnot” are listed
-<br><br></p></li> <li><p>Finding by email: <code class="hljs inline no-lang">find e/pete cap</code> <br><br>
-Expected: All found tutees with email matching “pete” or “cap” are listed
-<br><br></p></li> <li><p>Invalid format</p> <p>No prefix given: <code class="hljs inline no-lang">find</code>, <code class="hljs inline no-lang">find pete</code>, <code class="hljs inline no-lang">find @iamnot</code></p> <p>More than one prefix given: <code class="hljs inline no-lang">find n/pete t/@iamnot</code> <br><br>
-Expected: Error message showing that only one field can be found at a time
-<br></p></li></ol></li></ol> <h3 id="listing-all-tutees">Listing all tutees<a href="#listing-all-tutees" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>Enter <code class="hljs inline no-lang">list</code> into command box
-<br><br>
-Expected: All tutees will be listed in View All
-<br></li></ol> <h3 id="pinning-unpinning-a-tutee">Pinning/ Unpinning a tutee<a href="#pinning-unpinning-a-tutee" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>Pins a person to the top of the list
-Prerequisite: There must be at least one tutee in the current list
-<ol><li>Pinning a tutee: <code class="hljs inline no-lang">pin 1</code> <br><br>
-Expected: The first tutee in the current list will be pinned with a light blue outline.
-<br><br></li> <li>Unpinning a tutee: <code class="hljs inline no-lang">unpin 1</code> <br><br>
-Expected: The first pinned tutee in the current list will be unpinned
-<br><br></li> <li>Invalid format
-No INDEX given: <code class="hljs inline no-lang">pin</code> or <code class="hljs inline no-lang">unpin</code> <br><br>
-Expected: Error message showing the correct format of pin/ unpin
-<br></li></ol></li></ol> <h3 id="sorting-the-list">Sorting the list<a href="#sorting-the-list" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>Sorts the entire list in lexicographical order
-<ol><li>Enter <code class="hljs inline no-lang">sort</code> <br><br>
-Expected: The entire list will be sorted except for pinned tutees
-<br></li></ol></li></ol> <h3 id="editing-a-tutee">Editing a tutee<a href="#editing-a-tutee" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>Edits a tutee in the list
-Prerequisite: There must be at least one person in the current list
-<ol><li>Sample: <code class="hljs inline no-lang">edit 1 n/Michael Jackson</code> <br><br>
-Expected: The name of the first person in the current list is changed to Michael Jackson
-<br><br></li> <li>Sample: <code class="hljs inline no-lang">edit 1 t/@iamMJ e/Michael@example.com</code> <br><br>
-Expected: The email and telegram of the first person in the current list is changed to “Michael@example.com” and “@iamMJ” respectively
-<br><br></li> <li>Sample: <code class="hljs inline no-lang">edit 1 m/CS2100-T05</code> <br><br>
-Expected: All modules of the first person in the current list is overwritten to CS2100-T05 only
-<br><br></li> <li>Sample: <code class="hljs inline no-lang">edit 1 tag/</code> <br><br>
-Expected: All tags of the first person in the current list is cleared
-<br><br></li> <li>Invalid sample: <code class="hljs inline no-lang">edit or edit 1</code> <br><br>
-Expected: The corresponding error message will be shown for both samples
-<br></li></ol></li></ol> <h3 id="deleting-a-module-from-connects">Deleting a Module from ConnectS<a href="#deleting-a-module-from-connects" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>Deletes the module from ConnectS
-<ol><li>Sample: <code class="hljs inline no-lang">deleteMod CS2105</code> <br><br>
-Expected: Module CS2105 is deleted, tutees with CS2105 as their sole module are deleted and tutees that have CS2105 as one of their modules will have it be deleted.
-<br><br></li> <li>Invalid Sample: <code class="hljs inline no-lang">deleteMod</code> <br><br>
-Expected: Error message showing invalid usage of deleteMod
-<br></li></ol></li></ol> <h3 id="deleting-a-tutorial-from-connects">Deleting a Tutorial from ConnectS<a href="#deleting-a-tutorial-from-connects" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li>Deletes the tutorial which is part of a module-tutorial group from ConnectS
-<ol><li>Sample: <code class="hljs inline no-lang">deleteTut CS2103T-T11</code> <br><br>
-Expected: Tutorial T11 of CS2103T is deleted
-<br><br></li> <li>Invalid Sample: <code class="hljs inline no-lang">deleteTut</code>, <code class="hljs inline no-lang">deleteTut CS2103T</code> <br><br>
-Expected: Error message showing invalid usage of deleteTut
-<br></li></ol></li></ol> <h3 id="saving-data">Saving Data<a href="#saving-data" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <ol><li><p>Dealing with corrupted data file</p> <ol><li><p>Edit <code class="hljs inline no-lang">ConnectS.json</code> in the data folder such that the data do not make sense for ConnectS. For example, removing the name field of any person.</p></li> <li><p>Launch ConnectS from your terminal (<code class="hljs inline no-lang">java -jar “ConnectS.jar”</code>)
-<br><br>
-Expected: All tutees are cleared from ConnectS
-<br><br></p></li></ol></li> <li><p>Dealing with missing data file</p> <ol><li><p>Delete <code class="hljs inline no-lang">ConnectS.json</code></p></li> <li><p>Launch ConnectS from your terminal (<code class="hljs inline no-lang">java -jar “ConnectS.jar”</code>)
-<br><br>
-Expected: ConnectS is repopulated with sample tutees
-<br></p></li></ol></li></ol></div> <nav id="page-nav" data-v-e6005420><div class="nav-component slim-scroll" data-v-e6005420><nav id="mb-page-nav" class="nav nav-pills flex-column my-0 small no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#connects-developer-guide" data-v-e6005420>ConnectS Developer Guide‎</a> <nav class="nav nav-pills flex-column my-0 nested no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#acknowledgements" data-v-e6005420>Acknowledgements‎</a> <a class="nav-link py-1" href="#setting-up-getting-started" data-v-e6005420>Setting up, getting started‎</a> <a class="nav-link py-1" href="#design" data-v-e6005420>Design‎</a> <nav class="nav nav-pills flex-column my-0 nested no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#architecture" data-v-e6005420>Architecture‎</a> <a class="nav-link py-1" href="#ui-component" data-v-e6005420>UI component‎</a> <a class="nav-link py-1" href="#logic-component" data-v-e6005420>Logic component‎</a> <a class="nav-link py-1" href="#model-component" data-v-e6005420>Model component‎</a> <a class="nav-link py-1" href="#storage-component" data-v-e6005420>Storage component‎</a> <a class="nav-link py-1" href="#common-classes" data-v-e6005420>Common classes‎</a></nav> <a class="nav-link py-1" href="#implementation" data-v-e6005420>Implementation‎</a> <nav class="nav nav-pills flex-column my-0 nested no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#change-view-mode" data-v-e6005420>Change View Mode‎</a> <a class="nav-link py-1" href="#find-command" data-v-e6005420>Find Command‎</a> <a class="nav-link py-1" href="#sort-tutees-feature" data-v-e6005420>Sort tutees feature‎</a> <a class="nav-link py-1" href="#pin-a-tutee-feature" data-v-e6005420>Pin a Tutee feature‎</a></nav> <a class="nav-link py-1" href="#documentation-logging-testing-configuration-dev-ops" data-v-e6005420>Documentation, logging, testing, configuration, dev-ops‎</a> <a class="nav-link py-1" href="#appendix-requirements" data-v-e6005420>Appendix: Requirements‎</a> <nav class="nav nav-pills flex-column my-0 nested no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#product-scope" data-v-e6005420>Product scope‎</a> <a class="nav-link py-1" href="#user-stories" data-v-e6005420>User stories‎</a> <a class="nav-link py-1" href="#use-cases" data-v-e6005420>Use cases‎</a> <a class="nav-link py-1" href="#non-functional-requirements" data-v-e6005420>Non-Functional Requirements‎</a> <a class="nav-link py-1" href="#glossary" data-v-e6005420>Glossary‎</a></nav> <a class="nav-link py-1" href="#appendix-effort" data-v-e6005420>Appendix: Effort‎</a> <nav class="nav nav-pills flex-column my-0 nested no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#difficulty-level" data-v-e6005420>Difficulty Level‎</a> <a class="nav-link py-1" href="#challenges" data-v-e6005420>Challenges‎</a> <a class="nav-link py-1" href="#effort-required" data-v-e6005420>Effort Required‎</a> <a class="nav-link py-1" href="#achievements" data-v-e6005420>Achievements‎</a></nav> <a class="nav-link py-1" href="#appendix-planned-enhancements" data-v-e6005420>Appendix: Planned Enhancements‎</a> <a class="nav-link py-1" href="#appendix-instructions-for-manual-testing" data-v-e6005420>Appendix: Instructions for manual testing‎</a> <nav class="nav nav-pills flex-column my-0 nested no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#launch-and-shutdown" data-v-e6005420>Launch and shutdown‎</a> <a class="nav-link py-1" href="#viewing-help" data-v-e6005420>Viewing Help‎</a> <a class="nav-link py-1" href="#adding-a-tutee" data-v-e6005420>Adding a tutee‎</a> <a class="nav-link py-1" href="#finding-a-tutee" data-v-e6005420>Finding a Tutee‎</a> <a class="nav-link py-1" href="#listing-all-tutees" data-v-e6005420>Listing all tutees‎</a> <a class="nav-link py-1" href="#pinning-unpinning-a-tutee" data-v-e6005420>Pinning/ Unpinning a tutee‎</a> <a class="nav-link py-1" href="#sorting-the-list" data-v-e6005420>Sorting the list‎</a> <a class="nav-link py-1" href="#editing-a-tutee" data-v-e6005420>Editing a tutee‎</a> <a class="nav-link py-1" href="#deleting-a-module-from-connects" data-v-e6005420>Deleting a Module from ConnectS‎</a> <a class="nav-link py-1" href="#deleting-a-tutorial-from-connects" data-v-e6005420>Deleting a Tutorial from ConnectS‎</a> <a class="nav-link py-1" href="#saving-data" data-v-e6005420>Saving Data‎</a></nav></nav> <!----></nav></div> <!----></nav> <div aria-hidden="true" class="scroll-top-button fa-lg d-print-none" style="display:none;bottom:2%;right:2%;position:fixed;"><i class="fas fa-arrow-circle-up"></i></div></div> <footer><div class="text-center"><small>[<span><strong>Powered by</strong></span> <img src="https://markbind.org/favicon.ico" width="30"> <a href="https://markbind.org/">MarkBind 5.6.0</a>, generated on Tue, 8 Apr 2025, 3:30:51 GMT+8]</small></div></footer></div>
+is then passed on to the <code class="hljs inline no-lang">ModelManager</code> class which uses it to filter the list which the user then sees.</p> <span class="image-wrapper"><img src="/tp/diagrams/FindActivityDiagram.png" alt="Find Activity Diagram" width="" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span> <h3 id="delete-module-feature">Delete module feature<a href="#delete-module-feature" onclick="event.stopPropagation()" class="fa fa-anchor"></a></h3> <p>The delete module feature allows the user to delete the specified module from every tutee's module-tutorial
+module-tutorial list. In addition, if after the deletion, a tutee does not belong to any module-tutorial group,
+that tutee will be automatically deleted.</p> <p>The behaviour of the deleteMod feature can be seen below.</p> &quot;&gt;
+
+### Sort tutees feature
+
+The sort tutees feature allows the user to sort the entire list of tutees by their names in lexicographical order.
+
+The behaviour of the sort feature can be seen below.
+
+<span class="image-wrapper"><img src="/tp/diagrams/SortSequenceDiagram.png" alt="Sort Sequence Diagram" width="" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span>
+
+
+### Pin a Tutee feature
+
+The pinning feature allows the user to pin a tutee to the top of the list.
+
+The behaviour of the pinning feature can be seen below.
+
+<span class="image-wrapper"><img src="/tp/diagrams/PinSequenceDiagram.png" alt="Pin Sequence Diagram" width="" height="" loading="eager" class="img-fluid rounded"> <span class="image-caption"></span></span>
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Documentation, logging, testing, configuration, dev-ops**
+
+* [Documentation guide](Documentation.md)
+* [Testing guide](Testing.md)
+* [Logging guide](Logging.md)
+* [Configuration guide](Configuration.md)
+* [DevOps guide](DevOps.md)
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Requirements**
+
+### Product scope
+
+**Target user profile**:
+
+Computing Student TAs who...
+* teach multiple modules
+* have multiple tutorial groups
+  * have multiple groups within a tutorial group
+* have to manage reviewing their tutees’ projects/code
+* keep track of relevant professors
+
+**Value proposition**: Allows computing students to quickly sort contacts and grab information. Optimised for typing instead of mouse. Simplify managing social life. Allows TAs to group their tutees by course and tutorial group.
+
+
+### User stories
+
+Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
+
+| Priority | As a …​                                   | I want to …​                                                                                                  | So that…​                                                                                                   |
+|----------|-------------------------------------------|---------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `* * *`  | new user                                  | easily find instructions on commands that I need to use                                                       | I can quickly lookup the commands I want                                                                    |
+| `* * *`  | impatient user                            | see my contacts with all its details                                                                          | I can have a clear picture of all my contacts                                                               |
+| `* * *`  | forgetful user                            | add a contact to a list with a name                                                                           | I can store information related to the contact                                                              |
+| `* * *`  | forgetful user                            | add telegram handles to a contact                                                                             | I can look it up when I forget, since telegram is popular amongst university students                       |
+| `* * *`  | forgetful user                            | add email to a contact                                                                                        | I can look it up when I forget                                                                              |
+| `* * *`  | forgetful user                            | add tutorial groups to a contact                                                                              | I can see which group a student belongs to when I forget                                                    |
+| `* * *`  | forgetful user                            | add modules to a contact                                                                                      | I can see which module a student belongs to when I forget                                                   |
+| `* * *`  | clumsy user                               | delete a contact                                                                                              | I can remove contacts I accidentally added/don't need                                                       |
+| `* * *`  | user that prefers typing                  | perform all commands by typing instead of using a mouse to click                                              | I can execute commands faster because i type faster than i use a mouse to click                             | 
+| `* *`    | busy user                                 | find contacts quickly with some of his incomplete information key in to the search bar                        | I do not waste time on the nitty-gritty                                                                     |
+| `* *`    | frequent user                             | pin important contacts on the top                                                                             | I can easily find them                                                                                      |
+| `* *`    | impatient user                            | see my contacts by name                                                                                       | I can read more contacts simultaneously                                                                     |
+| `* *`    | new user                                  | have a guided tour of the basic commands                                                                      | I can start using the app without needing to look up the commands                                           |
+| `* *`    | TA of multiple courses                    | easily group contacts based on tutorial group                                                                 | I can find my students' contacts easily                                                                     |
+| `* *`    | TA of multiple courses                    | easily group contacts based on module                                                                         | I can find my students' contacts easily                                                                     |
+| `* *`    | user that values efficiency               | edit an existing contact's information                                                                        | I can save time not needing to delete and make a new contact                                                |
+| `* *`    | user that values efficiency               | easily find the commands I need by typing in a command to list all commands                                   | I don't have to navigate to an external guide                                                               |
+| `* *`    | TA that values efficiency                 | easily delete multiple contacts at once by giving a common module/tutorial                                    | I don't waste time deleting contacts one by one                                                             |
+| `* *`    | user who likes to keep things ordered     | sort my contacts by alphabetical order (or any specific order)                                                | everything is clear at a glance                                                                             |
+| `* *`    | user who's switching phone                | be able to load all my contacts easily                                                                        | I don't have to add them in again                                                                           |
+| `* *`    | user with many contacts                   | find contacts by email                                                                                        | I know who emailed me or forgot who the email belongs to                                                    |
+| `* *`    | user with many contacts                   | find contacts by telegram handle                                                                              | I can find out who the handle belongs to                                                                    |
+| `* *`    | user with many contacts                   | tag contacts based on their relationship to me                                                                | I can tell from a quick glance the type of contact I'm reading                                              |
+| `*`      | advanced user                             | create my own shortcuts in command line                                                                       | I can execute commands that I use often or commands that are very long faster                               |
+| `*`      | forgetful user                            | set a custom timer for a notification before a contact's birthday                                             | I am reminded to prepare for it                                                                             |
+| `*`      | new user                                  | have an autocomplete function predict my typing and show me the potential options                             | I can use the command even if I'm unsure of the exact structure                                             |
+| `*`      | new user                                  | see suggestions for commands when I input them wrong                                                          | I can quickly correct my mistake instead of needing to refer to another source                              |
+| `*`      | new user that prefers to learn visually   | watch a video showing the features and functionalities of the product                                         | I can learn better                                                                                          |
+| `*`      | new user who has a lot of contacts to add | have a command to efficiently add multiple contacts at once or be able to load contacts from phone contacts   | I don't waste a lot of time adding multiple contacts as a new user starting with 0 contacts                 |
+| `*`      | user that values efficiency               | type a quick command and automatically navigate to my contact's email client to write a message to the client | I can save time navigating to my email client and then copying the email in                                 |
+| `*`      | user that values efficiency               | type a quick command and automatically call a contact's phone on a phone or messenger app                     | I can save time navigating to the appropriate app and typing out their phone number                         |
+| `*`      | user that values efficiency               | see my commonly searched contacts at the top of the list                                                      | I don't waste time searching for contacts                                                                   |
+| `*`      | user who has many friends in the contacts | store their birthday and get a notification on that day                                                       | I can send them a message or make a phone call, and don't have to remember so many different birthday dates |
+| `*`      | user with a lot of contacts               | hide certain types of contact information when looking at the overall list                                    | the list view is smaller and not clogged with information I don't use often                                 |
+| `*`      | busy user                                 | type a quick command to paste information to a contact                                                        | I can speed up transferring a contact's information                                                         |
+| `*`      | busy user                                 | type a quick command to copy a contact's specific details                                                     | I can speed up transferring a contact's information                                                         |
+| `*`      | frequent user                             | schedule deletion of contacts at a specific date                                                              | My contacts are not cluttered with contacts I don't need in case i forget to delete                         |
+| `*`      | long-time user                            | delete a specific tag                                                                                         | I can delete some tags that no longer matter to me                                                          |
+| `*`      | user that values efficiency               | press a button to reinput the last executed command into the CLI                                              | I can save time if I'm inputting multiple similar commands                                                  |
+| `*`      | user that values efficiency               | select many users at a time then add a tag to all of them                                                     | I don't have to do the same thing again and again                                                           |
+
+*{More to be added}*
+
+### Use cases
+
+#### Use case: F1 - Find contact by keyword
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1. User requests a list of contacts matching given keyword(s).
+2. ConnectS shows a list of filtered contacts.
+
+   Use case ends.
+
+#### Use case: F2 - Filter contacts using view tabs
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1. User requests to change the view tab to a specified module-tutorial group.
+2. ConnectS changes the view tab to the specified group.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. The module-tutorial group provided does not exist.
+
+    * 1a1. ConnectS prompts the user that they are looking for a non-existent view tab.
+
+        Use case resumes from step 1.
+
+#### Use case: F3 - See all contacts using view all tab
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1. User requests to change the view tab to a view all contacts.
+2. ConnectS changes the view tab to all contacts.
+
+   Use case ends.
+
+#### Use case: UC1 - Show list of contacts
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1.  User requests to list contacts.
+2.  ConnectS shows a list of contacts.
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. The list is empty.
+  
+  Use case ends.
+
+#### Use case: UC2 - Add a contact
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1.  User requests add contacts with name, telegram handle, email, module and tutorial group.
+2.  ConnectS adds contact.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. ConnectS detects invalid parameter content.
+  
+    * 1a1. ConnectS prompts user that entered parameter(s) is invalid.
+
+      Use case resumes from step 1.
+
+* 1b. ConnectS detects invalid ordering of parameter.
+
+    * 1b1. ConnectS prompts user to enter parameters in a given order.
+
+      Use case resumes from step 1.
+
+#### Use case: UC3 - Edit a contact
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1.  User chooses a list of contacts to view ([F1](#use-case-f1---find-contact-by-keyword), [F2](#use-case-f2---filter-contacts-using-view-tabs) or [F3](#use-case-f3---see-all-contacts-using-view-all-tab)).
+2.  User requests to edit a specific contact in the list.
+3.  ConnectS edits the contact.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The list is empty.
+
+  Use case ends.
+
+* 2a. The given index is invalid.
+
+    * 2a1. ConnectS prompts user to enter a valid index.
+
+      Use case resumes at step 2.
+
+* 2b. The edits requested are invalid.
+
+    * 2b1. ConnectS prompts user to enter a valid edit request.
+
+      Use case resumes at step 2.
+
+* 2c. The edits result in the edited contact becoming the same as an already existing contact.
+
+    * 2c1. ConnectS prompts user that such a contact already exists.
+
+      Use case resumes at step 2.
+
+#### Use case: UC4 - Delete a contact
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1.  User chooses a list of contacts to view ([F1](#use-case-f1---find-contact-by-keyword), [F2](#use-case-f2---filter-contacts-using-view-tabs) or [F3](#use-case-f3---see-all-contacts-using-view-all-tab)).
+2.  User requests to delete a specific contact in the list.
+3.  ConnectS deletes the contact.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The list is empty.
+
+  Use case ends.
+
+* 2a. The given index is invalid.
+
+    * 2a1. ConnectS prompts user to enter a valid index.
+
+      Use case resumes at step 2.
+
+#### Use case: UC5 - Delete a module/tutorial
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1.  User requests to delete an entire module or tutorial from all contacts.
+2.  ConnectS deletes the module/tutorial from all contacts and deletes contacts left without any module-tutorial group.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The given module/tutorial does not exist.
+
+    * 1a1. ConnectS prompts user that the module/tutorial they requested does not exist.
+
+    Use case resumes from step 1.
+
+#### Use case: UC6 - Sort contacts
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1.  User requests to sort contacts by lexicographical order.
+2.  ConnectS sorts contacts by lexicographical order.
+
+    Use case ends.
+
+#### Use case: UC7 - Pin/unpin a contact
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1.  User chooses a list of contacts to view ([F1](#use-case-f1---find-contact-by-keyword), [F2](#use-case-f2---filter-contacts-using-view-tabs) or [F3](#use-case-f3---see-all-contacts-using-view-all-tab)).
+2.  User requests to pin/unpin a specific contact in the list.
+3.  ConnectS pins/unpins the contact.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The list is empty.
+
+  Use case ends.
+
+* 2a. The given index is invalid.
+
+    * 2a1. ConnectS prompts user to enter a valid index.
+
+      Use case resumes at step 2.
+
+#### Use case: UC8 - Clear all contacts
+**System: ConnectS**
+
+**Actor: User**
+
+**MSS:**
+
+1.  User requests to delete all contacts.
+2.  ConnectS deletes all contacts.
+    
+    Use case ends.
+
+**Extensions**
+
+* 1a. There are no contacts in ConnectS.
+
+  Use case ends.
+
+### Non-Functional Requirements
+
+1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
+2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
+3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+4.  The product should be for a single user.
+5.  The data should be stored locally and should be in a human editable text file.
+6.  The software should work without requiring an installer.
+7.  The software should not depend on a remote server.
+8.  The GUI should work well for standard screen resolutions 1920x1080 and higher, and, for screen scales 100% and 125%.
+9.  The GUI should be usable (i.e., all functions can be used even if the user experience is not optimal) for, resolutions 1280x720 and higher, and, for screen scales 150%.
+
+
+
+### Glossary
+
+* **Computing Student**: A student in a computer-related course (e.g. Computer Science, Information Technology, Information Security)
+* **TA**: Teaching Assistant
+* **Module**: A course subject that the TA is teaching (e.g. Intro to programming, Calculus, Discrete Maths)
+* **Tutee**: A person who receives tutoring from the TA
+* **Mainstream OS**: Windows, Linux, Unix, MacOS
+* **Typical usage**: Common operations a user will perform. (e.g., viewing and adding contacts)
+* **Above Average Typing Speed**: A typing speed above the average typing speed of around 40 words per minute
+* **Human editable text file**: A file format that can be read and modified with a standard text editor (e.g., `.txt` and `.json`)
+* **Remote Server**: Any server hosted over the network to store and access data.
+* **Screen scales**: The scaling factor that determines how much the screen content on the GUI should be enlarged
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Effort**
+
+### Difficulty Level
+
+* Upon AB3, we updated some fields of contacts and created several new functions. This is relatively 
+  challenging given the complexity of some specific functions created.
+* In addition, a new GUI is created. It was difficult given the difference between 
+  the new-added GUI and the original AB3 GUI.
+
+### Challenges
+* Extending the GUI to support View Tabs mode where contacts can be viewed in a dual-tab view for modules and tutorials
+  was challenging as we were new to JavaFX and had to spend much time acquiring a deeper understanding of JavaFX as well
+  as the existing UI implementation.
+* Ensuring that the view tabs UI mode is well integrated with existing features that work based on indexes of
+  the current list. <br>These features include the `pin`, `unpin`, `delete` and `edit` commands.
+    * An example of an integration bug we faced is that `delete 1` would delete the first person in View All mode rather 
+        than the first person in the current Module-Tutorial tab (in View Tabs mode).
+    * We faced a number of bugs from the integration and required much time to fix by making sure that features can
+      work with the individual Module-Tutorial tab that user is currently in.
+
+### Effort Required
+
+* One of the more time-consuming areas was in implementing the GUI and logic to include viewing contacts in a dual-tab view
+  for modules and tutorials. This was especially so as the tabs had to be layered, and the indexing logic was affected.
+* Additionally, since we wanted to adhere to the same architecture as AB3, a substantial amount of time and effort was spent
+  on studying the behaviour of the code.
+
+### Achievements
+
+* Compared to AB3, ConnectS has a new UI feature in its module and tutorial tabs, allowing for automatic sorting of
+  contacts into groups upon adding. There are also new view commands to allow switching between these UI tabs using the CLI.
+* Unlike AB3, ConnectS allows for deleting contacts en masse by deleting entire modules and tutorials at a time.
+* ConnectS has an expanded find feature which allows for searching for a contact using telegram handle and email
+  in addition to name. The find feature also finds based on incomplete keywords unlike AB3, which needed a complete match.
+* ConnectS has a new sorting feature that orders contacts in lexicographical order, unlike AB3 where they were just ordered
+  on when the contact was added.
+* ConnectS has a new pinning feature which allows for the pinning of a specified contact at the top of the list. The
+  pinned contact is also visually distinct, and not affected by sorting.
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Planned Enhancements**
+
+**ConnectS is made by a team of 4.**
+
+1. **Allow for more flexible name restrictions:** Currently, ConnectS only supports alphanumeric characters in names. This could be 
+   problematic as there are names that don't fit these restrictions. We plan to expand the restrictions to allow for foreign characters, or other characters such as `-` and `.`.
+2. **Improve on the collapsing contact feature:** Currently, contacts can be collapsed to show just the name by clicking on a triangle in the contact bar.
+   This does not fit well into the CLI-focused app. We plan to introduce a command to allow for collapsing/expanding of the contact bar using the CLI.
+3. **Improve handling of large amounts of tabs:** Currently, if many modules or tutorials are added, the module/tutorial tabs may overflow and result
+   in only a portion of the tabs being visible. This problem could be made worse if the window is resized to be smaller. We plan on introducing
+   tabs that shrink when there is no more space, or a scroll bar for the tabs.
+4. **Allow for more flexible tag restrictions:** Currently, tags only allow for one word. This is not very flexible, as users may wish to tag with short phrases.
+   We plan to allow multiple words in a tag within a given limit.
+5. **Allow view command to search by module:** Currently, view command needs the full module-tutorial group as input. This limits
+   its usefulness as users may often want to see a module tab, but are unsure of the specific tutorials. We plan to expand the view command
+   to switch to a module tab using only the module as input.
+6. **Improve duplicate person error message:** Currently, if a duplicate person is added or edited in, the thrown error message simply mentions
+   that a person with the same name/telegram handle/email already exists. This is limited in usefulness as the user doesn't know which field(s) are the same.
+   We plan to make the message more specific in identifying which field(s) are duplicated.
+7. **Improve find command validation:** Currently, find command does not use the field regex to validate inputs in order to allow for partial searching. This causes
+   a potential issue where a command such as `find n/Ada tt/@ada` would be valid and interpreted as finding a name of `n/Ada tt/@ada`, instead of recognising
+   the typo and attempted invalid use of two keyword fields. We plan to change the prefix ` PREFIX/` to have spaces on both sides to prevent this situation.
+8. **Improve edit command error messaging:** Currently, if you input something like `edit 1 aaaaa`, ConnectS will give an invalid index error. However, an
+   invalid field/prefix error would be more appropriate. We plan to make these cases have a separate field error message.
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Instructions for manual testing**
+
+Given below are instructions to test the app manually.
+
+<div class="alert box-container seamless" data-v-474166ec><!----> <div class="header-and-body" data-v-474166ec><!----> <div class="box-body-wrapper" data-v-474166ec><div class="icon-wrapper  text-info" data-v-474166ec><i class="fas fa-info" data-v-474166ec></i></div> <div aria-hidden="true" class="vertical-divider alert-info" data-v-474166ec></div> <div class="contents" data-v-474166ec>
+
+**Note:** These instructions only provide a starting point for testers to work on;
+testers are expected to do more *exploratory* testing.
+
+</div> <!----></div></div></div>
+
+### Launch and shutdown
+
+1. Initial launch
+   1. Download the jar file ConnectS.jar and copy into an empty folder
+   2. Launch the jar file from terminal by running this command:`java -jar &quot;ConnectS.jar`
+        <br><br>
+        Expected: Shows the GUI with some sample tutees. The window size may not be optimum
+        <br><br>
+
+2. Saving window preferences
+   1. Resize the window to an optimum size. Move the window to a different location. Close the window.
+   2. Re-launch the app from your terminal.
+      <br><br>
+      Expected: The most recent window size and location is retained.
+      <br><br>
+   
+3. Viewing All and Viewing Tabs
+   1. Click on the View button at the top of the application window, select either View All or View Tabs to toggle between the two different views.
+
+
+4. Exiting Application
+   1. Enter `exit` into the command box.
+        <br><br>
+        Expected: The application will close
+        <br>
+
+
+### Viewing Help
+
+1. While in ConnectS, enter `help` into the command box.
+    <br><br>
+    Expected: A pop-up message showing proper usage of all commands appears
+    <br><br>
+2. To visit the user guide, click on the help button at the top of the application window. A small window will appear, click on Copy URL and paste into your preferred browser to visit the user guide.
+<br>
+
+
+### Adding a tutee
+1. Adds a tutee to ConnectS
+   1. Sample: `add n/Peter Parker t/@iamnotspidey e/peter@example.com m/CS2103T-T01`
+        <br><br>
+        Expected: A new person with name Peter Parker, telegram handle @iamnotspidey, email peter@example.com and a module CS2103T-T01 is added to the correct module and tutorial tab.
+        <br><br>
+   2. Sample: `add n/Tony Stark t/@iamnotironman e/stark@example.com m/CS2103T-T01 tag/Rich`
+        <br><br>
+        Expected: A new person with name Tony Stark, telegram handle @iamnotironman, email stark@example.com, a module CS2103T-T01 and a tag of Rich is added
+        <br><br>
+   3. Sample: `add n/Steve Rogers e/cap@example.com t/@iamnotold m/CS2103T-T01 m/CS2106-T01 tag/Young tag/Captain`
+        <br><br>
+        Expected: A new person with name Steve Rogers, telegram handle @iamnotold, email cap@example.com, 2 module CS2103T-T01 and CS2106-T01 and 2 tags of Young and Captain is added
+        <br><br>
+   4. Invalid Sample: `add [Duplicate name, email, or telegram handle]`
+        <br><br>
+        Expected: Error message indicating person already exists in ConnectS
+        <br>
+
+
+### Finding a Tutee
+1. Finds a tutee
+   1. Finding by name: `find n/Pete Rogers`
+        <br><br>
+        Expected: All found tutees with name matching “Pete” or “Rogers” are listed
+        <br><br>
+   2. Finding by telegram handle: `find t/@iamnot`
+        <br><br>
+        Expected: All found tutees with telegram handle matching “@iamnot” are listed
+        <br><br>
+   3. Finding by email: `find e/pete cap`
+        <br><br>
+        Expected: All found tutees with email matching “pete” or “cap” are listed
+        <br><br>
+   4. Invalid format
+        
+        No prefix given: `find`, `find pete`, `find @iamnot`
+
+        More than one prefix given: `find n/pete t/@iamnot`
+        <br><br>
+        Expected: Error message showing that only one field can be found at a time
+        <br>
+
+
+### Listing all tutees
+1. Enter `list` into command box
+    <br><br>
+    Expected: All tutees will be listed in View All
+    <br>
+
+
+### Pinning/ Unpinning a tutee
+1. Pins a person to the top of the list
+    Prerequisite: There must be at least one tutee in the current list 
+   1. Pinning a tutee: `pin 1`
+        <br><br>
+        Expected: The first tutee in the current list will be pinned with a light blue outline.
+        <br><br>
+   2. Unpinning a tutee: `unpin 1`
+		<br><br>
+		Expected: The first pinned tutee in the current list will be unpinned
+        <br><br>
+   3. Invalid format
+        No INDEX given: `pin` or `unpin`
+        <br><br>
+        Expected: Error message showing the correct format of pin/ unpin
+        <br>
+
+### Sorting the list
+1. Sorts the entire list in lexicographical order
+    1. Enter `sort`
+        <br><br>
+        Expected: The entire list will be sorted except for pinned tutees
+        <br>
+
+
+### Editing a tutee
+1. Edits a tutee in the list
+    Prerequisite: There must be at least one person in the current list
+    1. Sample: `edit 1 n/Michael Jackson`
+        <br><br>
+        Expected: The name of the first person in the current list is changed to Michael Jackson
+       <br><br>
+    2. Sample: `edit 1 t/@iamMJ e/Michael@example.com`
+       <br><br>
+        Expected: The email and telegram handle of the first person in the current list is changed to “Michael@example.com” and “@iamMJ” respectively
+       <br><br>
+    3. Sample: `edit 1 m/CS2100-T05`
+       <br><br>
+        Expected: All modules of the first person in the current list are overwritten to CS2100-T05 only
+       <br><br>
+    4. Sample: `edit 1 tag/`
+       <br><br>
+        Expected: All tags of the first person in the current list are cleared
+       <br><br>
+    5. Invalid sample: `edit or edit 1`
+       <br><br>
+        Expected: The corresponding error message will be shown for both samples
+       <br>
+
+
+### Deleting a Module from ConnectS
+1. Deletes the module from ConnectS
+    1. Sample: `deleteMod CS2105`
+        <br><br>
+        Expected: Module CS2105 is deleted, tutees with CS2105 as their sole module are deleted and tutees that have CS2105 as one of their modules will have it be deleted.
+       <br><br>
+    2. Invalid Sample: `deleteMod`
+       <br><br>
+        Expected: Error message showing invalid usage of deleteMod
+       <br>
+
+### Deleting a Tutorial from ConnectS
+1. Deletes the tutorial which is part of a module-tutorial group from ConnectS
+   1. Sample: `deleteTut CS2103T-T11`
+        <br><br>
+        Expected: Tutorial T11 of CS2103T is deleted
+        <br><br>
+   2. Invalid Sample: `deleteTut`
+        <br><br>
+        Expected: Error message showing invalid usage of deleteTut
+        <br>
+
+
+### Saving Data
+1. Dealing with corrupted data file
+   1. Edit `ConnectS.json` in the data folder such that the data do not make sense for ConnectS. For example, removing the name field of any person.
+   
+   2. Launch ConnectS from your terminal (`java -jar “ConnectS.jar”`)
+        <br><br>
+        Expected: All tutees are cleared from ConnectS
+        <br><br>
+
+2. Dealing with missing data file
+   1. Delete `ConnectS.json`
+   
+   2. Launch ConnectS from your terminal (`java -jar “ConnectS.jar”`)
+        <br><br>
+        Expected: ConnectS is repopulated with sample tutees
+        <br></div> <nav id="page-nav" data-v-e6005420><div class="nav-component slim-scroll" data-v-e6005420><nav id="mb-page-nav" class="nav nav-pills flex-column my-0 small no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#connects-developer-guide" data-v-e6005420>ConnectS Developer Guide‎</a> <nav class="nav nav-pills flex-column my-0 nested no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#acknowledgements" data-v-e6005420>Acknowledgements‎</a> <a class="nav-link py-1" href="#setting-up-getting-started" data-v-e6005420>Setting up, getting started‎</a> <a class="nav-link py-1" href="#design" data-v-e6005420>Design‎</a> <nav class="nav nav-pills flex-column my-0 nested no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#architecture" data-v-e6005420>Architecture‎</a> <a class="nav-link py-1" href="#ui-component" data-v-e6005420>UI component‎</a> <a class="nav-link py-1" href="#logic-component" data-v-e6005420>Logic component‎</a> <a class="nav-link py-1" href="#model-component" data-v-e6005420>Model component‎</a> <a class="nav-link py-1" href="#storage-component" data-v-e6005420>Storage component‎</a> <a class="nav-link py-1" href="#common-classes" data-v-e6005420>Common classes‎</a></nav> <a class="nav-link py-1" href="#implementation" data-v-e6005420>Implementation‎</a> <nav class="nav nav-pills flex-column my-0 nested no-flex-wrap" data-v-e6005420><a class="nav-link py-1" href="#change-view-mode" data-v-e6005420>Change View Mode‎</a> <a class="nav-link py-1" href="#find-command" data-v-e6005420>Find Command‎</a> <a class="nav-link py-1" href="#delete-module-feature" data-v-e6005420>Delete module feature‎</a></nav></nav> <!----></nav></div> <!----></nav> <div aria-hidden="true" class="scroll-top-button fa-lg d-print-none" style="display:none;bottom:2%;right:2%;position:fixed;"><i class="fas fa-arrow-circle-up"></i></div></div> <footer><div class="text-center"><small>[<span><strong>Powered by</strong></span> <img src="https://markbind.org/favicon.ico" width="30"> <a href="https://markbind.org/">MarkBind 5.6.0</a>, generated on Tue, 8 Apr 2025, 11:34:51 GMT+8]</small></div></footer></div>
 </body><script src="/tp/markbind/js/bootstrap-utility.min.js"></script>
 <script src="/tp/markbind/js/polyfill.min.js"></script>
 <script src="/tp/markbind/js/vue.min.js"></script>
